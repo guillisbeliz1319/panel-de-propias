@@ -25,10 +25,10 @@ with ui.sidebar(open="desktop"):
 
     )
     ui.input_checkbox_group(
-        'time',                      
-        'Food service',             
-       ['Lunch', 'Dinner'],         
-        selected=['Lunch', 'Dinner'], 
+        'day',                      
+        'Días de la semana',             
+       ['Thur', 'Fri', 'Sat', 'Sun'],         
+        selected=['Thur'], 
         inline=True,                 
     )
 
@@ -76,14 +76,14 @@ ui.include_css(app_dir / "styles.css")
 def tips_data():
     bill = input.total_bill()  # Obtener rango de facturas seleccionado
     idx1 = tips.total_bill.between(bill[0], bill[1])  # Filtrar por factura
-    idx2 = tips.time.isin(input.time())  # Filtrar por momento
+    idx2 = tips.day.isin(input.day())  # Filtrar por momento
     return tips[idx1 & idx2]  
 
 @reactive.effect
 @reactive.event(input.reset)  # Activar cuando se haga clic en "reset"
 def _():
     ui.update_slider("total_bill", value=bill_rng)  # Restablecer control deslizante
-    ui.update_checkbox_group("time", selected=["Lunch", "Dinner"])  
+    ui.update_checkbox_group("day", selected=["Thur"])  
 
 with ui.layout_columns(col_widths=[6, 6, 12]):
     # Primera tarjeta: Tabla de datos
@@ -100,9 +100,9 @@ with ui.card(full_screen=True):
             with ui.popover(title='añade un color variable', placement='top'):
                 ICONS['ellipsis']
                 ui.input_radio_buttons(
-                    'scatter_color',
-                    None,
-                    ['none', 'sex', 'smoker', 'day', 'time'],
+                    'tip_perc_yl',
+                    'Split by:',
+                    ['sex', 'smoker', 'day', 'time'],
                     inline=True,
                 )
 
@@ -128,7 +128,7 @@ with ui.card(full_screen=True):
                     "Split by:",
                     ["sex", "smoker", "day", "time"],
                     selected="day",  # Valor predeterminado
-                    inline=True,
+                    
                 )
 
         # Renderizar el gráfico de densidad
